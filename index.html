@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SZKHUB — Protected Loader Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07070a;--bg2:#0e0d12;--surf:rgba(255,255,255,.04);--bd:rgba(212,175,55,.22);--tx:#f3ecd8;--mu:#9b937c;--g1:#f5d77a;--g2:#c9a227;--g3:#8a6d12;--glow:0 0 22px rgba(212,175,55,.18);--code:#050507;--ok:#6fcf8a;--bad:#e5645a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[data-theme=light]{--bg:#ffffff;--bg2:#faf6ea;--surf:#fffdf6;--bd:rgba(176,137,20,.3);--tx:#2a2412;--mu:#7d7358;--g1:#d4af37;--g2:#b8921a;--g3:#8a6d12;--glow:0 6px 24px rgba(120,90,10,.12);--code:#f6f0dc}
+html{scroll-padding-top:env(safe-area-inset-top,0px);color-scheme:dark}[data-theme=light]{color-scheme:light}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 Inter,system-ui,sans-serif;transition:background .3s,color .3s}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(60% 40% at 80% 0,rgba(212,175,55,.12),transparent),radial-gradient(40% 30% at 0 100%,rgba(212,175,55,.08),transparent);pointer-events:none;z-index:0}
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+aside{width:236px;background:var(--bg2);border-right:1px solid var(--bd);padding:18px 12px;position:sticky;top:0;height:100vh;overflow:auto;flex:none;transition:transform .3s}
+.logo{font:700 22px Cinzel,serif;letter-spacing:.14em;background:linear-gradient(135deg,var(--g1),var(--g3));-webkit-background-clip:text;background-clip:text;color:transparent;padding:4px 10px 16px}
+.nav{display:flex;gap:10px;align-items:center;width:100%;padding:9px 12px;border:0;background:none;color:var(--mu);border-radius:10px;cursor:pointer;font:500 13.5px Inter;text-align:left;transition:.2s}
+.nav:hover{color:var(--tx);background:var(--surf)}.nav.on{color:var(--g1);background:var(--surf);box-shadow:inset 0 0 0 1px var(--bd),var(--glow)}
+main{flex:1;min-width:0;padding:22px clamp(14px,3vw,34px) 60px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:20px}.top h1{font:700 22px Cinzel,serif;margin:0;flex:1;letter-spacing:.05em}
+.burger{display:none}
+.btn{background:linear-gradient(135deg,var(--g1),var(--g2));color:#1a1405;border:0;border-radius:10px;padding:9px 15px;font:600 13px Inter;cursor:pointer;transition:.2s;box-shadow:var(--glow)}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.07)}.btn.o{background:var(--surf);color:var(--tx);box-shadow:inset 0 0 0 1px var(--bd)}.btn.d{background:rgba(229,100,90,.15);color:var(--bad);box-shadow:inset 0 0 0 1px rgba(229,100,90,.4)}.btn.s{padding:5px 10px;font-size:12px}
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:16px;padding:18px;backdrop-filter:blur(12px);box-shadow:var(--glow);animation:in .4s both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:14px}
+.stat b{display:block;font:700 30px Cinzel,serif;color:var(--g1)}.stat span{color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+h2{font:600 15px Inter;margin:0 0 12px;color:var(--g1);letter-spacing:.04em}
+input,textarea,select{width:100%;background:var(--code);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:9px 12px;font:13px Inter;outline:none;transition:.2s}
+input:focus,textarea:focus{border-color:var(--g2);box-shadow:var(--glow)}textarea{font-family:ui-monospace,Menlo,monospace;min-height:150px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:0 0 auto}.row>input{flex:1;min-width:160px}
+pre,code.b{display:block;background:var(--code);border:1px solid var(--bd);border-radius:10px;padding:13px;font:13px ui-monospace,Menlo,monospace;color:var(--g1);overflow-x:auto;white-space:pre}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--bd);white-space:nowrap}th{color:var(--mu);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:600;border:1px solid var(--bd)}.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--g1)}
+.empty{text-align:center;color:var(--mu);padding:34px 10px}.empty i{display:block;font-size:34px;font-style:normal;color:var(--g2);margin-bottom:6px}
+.note{color:var(--mu);font-size:12.5px;margin:8px 0 0}
+.bar{height:10px;border-radius:6px;background:linear-gradient(90deg,var(--g3),var(--g1));transition:width .6s}
+#toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:50}
+.toast{background:var(--bg2);border:1px solid var(--g2);padding:10px 16px;border-radius:12px;box-shadow:var(--glow);animation:in .3s}
+#dlg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:60;padding:16px}#dlg.on{display:flex}#dlg .card{max-width:380px;background:var(--bg2)}
+.sw{position:relative;width:42px;height:24px;flex:none}.sw input{opacity:0;position:absolute;inset:0;cursor:pointer;z-index:1}.sw i{position:absolute;inset:0;background:var(--code);border:1px solid var(--bd);border-radius:99px;transition:.2s}.sw i::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--mu);transition:.2s}.sw input:checked+i{background:var(--g2)}.sw input:checked+i::after{left:21px;background:#fff}
+.line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}.line:last-child{border:0}
+@media(max-width:820px){aside{position:fixed;z-index:40;transform:translateX(-100%);left:0}aside.open{transform:none}.burger{display:inline-block}}
+</style></head><body>
+<div class="app"><aside id="side"><div class="logo">SZKHUB</div><div id="nav"></div></aside>
+<main><div class="top"><button class="btn o burger" onclick="side.classList.toggle('open')">☰</button><h1 id="title"></h1><button class="btn o" id="thm"></button></div><div id="view"></div></main></div>
+<div id="toasts"></div><div id="dlg"><div class="card"><p id="dmsg"></p><div class="row" style="justify-content:flex-end"><button class="btn o" id="dn">Cancel</button><button class="btn" id="dy">Confirm</button></div></div></div>
+<script>
+const SECS=[["overview","Overview"],["scripts","Script Manager"],["loader","Loader Generator"],["api","API Management"],["endpoints","Endpoint Management"],["domains","Domain Hosting"],["security","Security Center"],["logs","Access Logs"],["analytics","Analytics"],["settings","Settings"],["account","Account"]];
+const ROUTES=["/api/loader","/api/session","/api/ticket","/api/chunks","/api/scripts","/api/domains","/api/analytics","/api/admin"];
+let S={theme:matchMedia("(prefers-color-scheme: light)").matches?"light":"dark",base:"",scripts:[],domains:[],logs:[],ver:1,at:Date.now(),maint:false,off:{},reg:true,rate:60,name:"Administrator",sec:{sessions:0}};
+try{Object.assign(S,JSON.parse(localStorage.getItem("szk")||"{}"))}catch(e){}
+let cur=(location.hash||"#overview").slice(1);if(!SECS.some(s=>s[0]==cur))cur="overview";
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const save=()=>{try{localStorage.setItem("szk",JSON.stringify(S))}catch(e){}};
+const fmt=t=>new Date(t).toLocaleString();
+function toast(m){const d=document.createElement("div");d.className="toast";d.textContent=m;$("toasts").append(d);setTimeout(()=>d.remove(),3200)}
+function ask(m,fn){$("dmsg").textContent=m;$("dlg").classList.add("on");$("dn").onclick=()=>$("dlg").classList.remove("on");$("dy").onclick=()=>{$("dlg").classList.remove("on");fn()}}
+function log(type,msg){S.logs.unshift({t:Date.now(),type,msg});S.logs=S.logs.slice(0,500);save()}
+const dom=()=>{const p=S.domains.find(d=>d.primary);return p?p.name:(S.base?S.base.replace(/^https?:\/\//,"").replace(/\/$/,""):"YOUR-DOMAIN")};
+const loaderStr=()=>`loadstring(game:HttpGet("https://${dom()}/api/loader"))()`;
+function theme(t){S.theme=t;document.documentElement.dataset.theme=t;$("thm").textContent=t==="dark"?"☀ White & Gold":"☾ Black & Gold";save()}
+function go(id){cur=id;location.hash=id;side.classList.remove("open");render()}
+function counts(){const pub=S.scripts.filter(s=>s.status==="published").length;const c=t=>S.logs.filter(l=>l.type===t).length;
+return [["Total scripts",S.scripts.length],["Active loaders",pub&&!S.maint&&!S.off["/api/loader"]?1:0],["API requests",c("api")],["Protected endpoints",ROUTES.filter(r=>!S.off[r]).length],["Blocked requests",c("blocked")],["Active sessions",S.sec.sessions]]}
+function empty(i,t){return `<div class="empty"><i>${i}</i>${t}</div>`}
+const V={
+overview(){return `<div class="grid">${counts().map(([l,v])=>`<div class="card stat"><span>${l}</span><b data-n="${v}">0</b></div>`).join("")}</div>
+<div class="card"><h2>Loader</h2><code class="b">${esc(loaderStr())}</code><p class="note">Statistics reflect events recorded by this dashboard. Request, block and session counters fill from real server logs once the backend API is connected under API Management.</p></div>`},
+scripts(){return `<div class="card" style="margin-bottom:14px"><h2>Add or update script</h2><div class="row" style="margin-bottom:10px"><input id="sn" placeholder="Script name"><input id="sf" type="file" accept=".lua,.luau" style="max-width:260px"></div><textarea id="sc" placeholder="Paste LuaU source here"></textarea><div class="row" style="margin-top:10px"><button class="btn" onclick="saveScript()">Save script</button><span class="note" style="margin:0">Scripts are held in this browser only and are never served as a public URL.</span></div></div>
+<div class="card"><h2>Scripts</h2>${S.scripts.length?`<div class="tw"><table><tr><th>Name</th><th>Version</th><th>Status</th><th>Updated</th><th></th></tr>${S.scripts.map((s,i)=>`<tr><td>${esc(s.name)}</td><td>v${s.v}</td><td><span class="pill ${s.status==="published"?"ok":"warn"}">${s.status}</span></td><td>${fmt(s.at)}</td><td class="row"><button class="btn o s" onclick="editS(${i})">Edit</button><button class="btn o s" onclick="togS(${i})">${s.status==="published"?"Disable":"Publish"}</button><button class="btn d s" onclick="delS(${i})">Delete</button></td></tr>`).join("")}</table></div>`:empty("◈","No scripts yet. Upload a .lua or .luau file or paste source above.")}</div>`},
+loader(){const on=!S.maint&&!S.off["/api/loader"]&&S.scripts.some(s=>s.status==="published");return `<div class="card"><h2>SZKHUB — PROTECTED LOADER</h2><p style="margin:0 0 4px;font-weight:600;letter-spacing:.1em">SOLO EXECUTADORES</p><p class="note" style="margin:0 0 12px">Loader protegido. Copia el loader y pégalo en Delta, Hydrogen, Codex u otro executor compatible. El código real no se entrega al navegador.</p>
+<code class="b">${esc(loaderStr())}</code><div class="row" style="margin-top:12px"><button class="btn" onclick="copyL()">Copy Loader</button><button class="btn o" onclick="regen()">Regenerate Loader</button></div></div>
+<div class="grid" style="margin-top:14px"><div class="card stat"><span>File</span><b style="font-size:16px">SZKHUB_loader.lua</b></div><div class="card stat"><span>Endpoint</span><b style="font-size:16px">/api/loader</b></div><div class="card stat"><span>Status</span><b style="font-size:16px" class="${on?"ok":"warn"}">${on?"READY":S.maint?"MAINTENANCE":"NO PUBLISHED SCRIPT"}</b></div><div class="card stat"><span>Version · Updated</span><b style="font-size:15px">v${S.ver} · ${fmt(S.at)}</b></div></div>`},
+api(){return `<div class="card" style="margin-bottom:14px"><h2>API base URL</h2><div class="row"><input id="bu" value="${esc(S.base)}" placeholder="https://api.your-domain.com"><button class="btn" onclick="setBase()">Save</button><button class="btn o" onclick="testBase()">Test connectivity</button></div><p class="note">All requests use this configurable base, so the same frontend works on Vercel, Cloudflare, Railway, Render or a VPS.</p></div>
+<div class="card"><h2>Routes</h2><div class="tw"><table><tr><th>Route</th><th>Method</th><th>State</th></tr>${ROUTES.map(r=>`<tr><td>${r}</td><td>GET / POST</td><td class="${S.off[r]?"bad":"ok"}">${S.off[r]?"disabled":"enabled"}</td></tr>`).join("")}</table></div></div>`},
+endpoints(){return `<div class="card"><h2>Endpoints</h2>${ROUTES.map(r=>`<div class="line"><div><b>${r}</b><div class="note" style="margin:0">${S.base?esc(S.base)+r:"Set an API base URL to enable testing"}</div></div><div class="row"><button class="btn o s" onclick="testR('${r}')">Test</button><label class="sw"><input type="checkbox" ${S.off[r]?"":"checked"} onchange="togR('${r}',this.checked)"><i></i></label></div></div>`).join("")}</div>`},
+domains(){return `<div class="card" style="margin-bottom:14px"><h2>Add custom domain</h2><div class="row"><input id="dm" placeholder="loader.example.com"><button class="btn" onclick="addD()">Add domain</button></div><p class="note">Point a CNAME at your host, then run Verify. DNS and SSL results require the backend; until then status stays “pending”.</p></div>
+<div class="card"><h2>Domains</h2>${S.domains.length?`<div class="tw"><table><tr><th>Domain</th><th>DNS</th><th>SSL</th><th>Primary</th><th></th></tr>${S.domains.map((d,i)=>`<tr><td>${esc(d.name)}</td><td><span class="pill ${d.dns==="verified"?"ok":"warn"}">${d.dns}</span></td><td><span class="pill warn">${d.ssl}</span></td><td>${d.primary?"★":""}</td><td class="row"><button class="btn o s" onclick="verD(${i})">Verify</button><button class="btn o s" onclick="priD(${i})">Set primary</button><button class="btn d s" onclick="delD(${i})">Remove</button></td></tr>`).join("")}</table></div>`:empty("◎","No domains configured.")}</div>`},
+security(){const A=[["Revoke all sessions","Invalidates every active session token.",()=>{S.sec.sessions=0;log("security","All sessions revoked")}],["Rotate API credentials","Issues new credentials and invalidates old ones.",()=>log("security","API credentials rotation requested")],["Revoke compromised tickets","Voids all unused single-use tickets.",()=>log("security","All tickets revoked")],["Regenerate loader","Rotates loader version.",()=>{S.ver++;S.at=Date.now();log("security","Loader regenerated v"+S.ver)}]];
+window.SA=A;return `<div class="card" style="margin-bottom:14px"><h2>Controls</h2>${A.map((a,i)=>`<div class="line"><div><b>${a[0]}</b><div class="note" style="margin:0">${a[1]}</div></div><button class="btn d s" onclick="runSA(${i})">Run</button></div>`).join("")}<div class="line"><div><b>Disable loader endpoint</b></div><label class="sw"><input type="checkbox" ${S.off["/api/loader"]?"checked":""} onchange="togR('/api/loader',!this.checked)"><i></i></label></div><div class="line"><div><b>Maintenance mode</b></div><label class="sw"><input type="checkbox" ${S.maint?"checked":""} onchange="S.maint=this.checked;log('security','Maintenance '+(S.maint?'on':'off'));save();toast('Maintenance '+(S.maint?'enabled':'disabled'))"><i></i></label></div></div>
+<div class="card"><h2>Recent security events</h2>${logTable(S.logs.filter(l=>l.type==="security"||l.type==="blocked").slice(0,8))}</div>`},
+logs(){return `<div class="card"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Access logs</h2><button class="btn d s" onclick="ask('Clear all logs?',()=>{S.logs=[];save();render()})">Clear</button></div>${logTable(S.logs)}</div>`},
+analytics(){const T=["api","security","script","loader","blocked"],m=Math.max(1,...T.map(t=>S.logs.filter(l=>l.type===t).length));return `<div class="card"><h2>Events by type</h2>${S.logs.length?T.map(t=>{const n=S.logs.filter(l=>l.type===t).length;return `<div class="line"><span style="width:90px">${t}</span><div style="flex:1"><div class="bar" style="width:${n/m*100}%"></div></div><b>${n}</b></div>`}).join(""):empty("▤","No events recorded yet.")}</div>`},
+settings(){return `<div class="card"><h2>Platform</h2><div class="line"><b>Allow user registration</b><label class="sw"><input type="checkbox" ${S.reg?"checked":""} onchange="S.reg=this.checked;save();toast('Saved')"><i></i></label></div><div class="line"><b>Rate limit (requests / minute / IP)</b><input type="number" min="1" value="${S.rate}" style="width:100px" onchange="S.rate=+this.value;save();toast('Saved')"></div></div>
+<div class="card" style="margin-top:14px"><h2>Discord bot</h2><p class="note" style="margin:0 0 8px">The <b>.get</b> command replies only with the protected loader:</p><code class="b">${esc(loaderStr())}</code><p class="note">Bot authentication, server allow-list and admin commands are enforced by the backend API.</p></div>`},
+account(){return `<div class="card"><h2>Account</h2><div class="row"><input id="an" value="${esc(S.name)}"><button class="btn" onclick="S.name=$('an').value;save();toast('Account updated')">Save</button></div><p class="note">Role: Administrator. Real login, password hashing and audit logs run on the backend; no credentials are stored in this page.</p></div>`}};
+function logTable(L){return L.length?`<div class="tw"><table><tr><th>Time</th><th>Type</th><th>Event</th></tr>${L.map(l=>`<tr><td>${fmt(l.t)}</td><td><span class="pill">${l.type}</span></td><td>${esc(l.msg)}</td></tr>`).join("")}</table></div>`:empty("☰","No events recorded yet.")}
+function render(){$("nav").innerHTML=SECS.map(([id,n])=>`<button class="nav ${id===cur?"on":""}" onclick="go('${id}')">${n}</button>`).join("");$("title").textContent=SECS.find(s=>s[0]===cur)[1];$("view").innerHTML=V[cur]();
+document.querySelectorAll("[data-n]").forEach(e=>{const n=+e.dataset.n;let i=0;const t=setInterval(()=>{e.textContent=Math.round(n*(++i/20));if(i>=20)clearInterval(t)},25)})}
+function copyL(){const f=()=>{log("loader","Loader copied");toast("Loader copied")};navigator.clipboard?navigator.clipboard.writeText(loaderStr()).then(f,()=>toast("Copy failed — select the text manually")):toast("Copy unavailable — select the text manually")}
+function regen(){ask("Regenerate the loader? Previous loader version will be rotated out.",()=>{S.ver++;S.at=Date.now();log("loader","Loader regenerated v"+S.ver);render();toast("Loader regenerated")})}
+$("view").addEventListener("change",e=>{if(e.target.id==="sf"&&e.target.files[0]){const f=e.target.files[0];f.text().then(t=>{$("sc").value=t;if(!$("sn").value)$("sn").value=f.name.replace(/\.luau?$/,"")})}});
+function saveScript(){const n=$("sn").value.trim(),c=$("sc").value;if(!n||!c.trim())return toast("Name and source are required");const ex=S.scripts.find(s=>s.name===n);if(ex){ex.code=c;ex.v++;ex.at=Date.now()}else S.scripts.push({name:n,code:c,v:1,status:"draft",at:Date.now()});log("script","Saved script "+n);save();render();toast("Script saved")}
+function editS(i){$("sn").value=S.scripts[i].name;$("sc").value=S.scripts[i].code;scrollTo({top:0,behavior:"smooth"})}
+function togS(i){const s=S.scripts[i];s.status=s.status==="published"?"disabled":"published";log("script",s.name+" "+s.status);save();render()}
+function delS(i){ask("Delete this script?",()=>{log("script","Deleted "+S.scripts[i].name);S.scripts.splice(i,1);save();render()})}
+function setBase(){S.base=$("bu").value.trim().replace(/\/$/,"");save();toast("API base saved")}
+async function ping(r){if(!S.base)return toast("Set an API base URL first");log("api","Test "+r);try{const x=await fetch(S.base+r,{method:"HEAD"});toast(r+" responded "+x.status)}catch(e){toast(r+" unreachable")}save()}
+const testBase=()=>ping("/api/loader"),testR=ping;
+function togR(r,on){S.off[r]=!on;log("security",r+(on?" enabled":" disabled"));save();render()}
+function addD(){const n=$("dm").value.trim().toLowerCase();if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(n))return toast("Enter a valid domain");if(S.domains.some(d=>d.name===n))return toast("Already added");S.domains.push({name:n,dns:"pending",ssl:"pending",primary:!S.domains.length});log("api","Domain added "+n);save();render()}
+async function verD(i){const d=S.domains[i];try{const r=await fetch("https://dns.google/resolve?name="+d.name+"&type=CNAME");const j=await r.json();d.dns=j.Answer?"verified":"pending";toast(j.Answer?"DNS record found":"No CNAME found yet")}catch(e){toast("DNS lookup unavailable")}save();render()}
+const priD=i=>{S.domains.forEach((d,j)=>d.primary=i===j);save();render();toast("Primary domain set")};
+const delD=i=>ask("Remove this domain?",()=>{const w=S.domains[i].primary;S.domains.splice(i,1);if(w&&S.domains[0])S.domains[0].primary=true;save();render()});
+function runSA(i){ask(SA[i][0]+"?",()=>{SA[i][2]();save();render();toast(SA[i][0]+" done")})}
+$("thm").onclick=()=>theme(S.theme==="dark"?"light":"dark");
+theme(S.theme);render();
+</script></body></html>
